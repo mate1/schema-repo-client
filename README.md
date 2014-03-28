@@ -13,7 +13,7 @@ Compile:
 Package:
 
     $ ./activator package
-    $ ls -l target/scala-2.10/schema-repo-client_2.10-0.1.jar
+    $ ls -l target/scala-2.10/schema-repo-client_2.10-0.1-SNAPSHOT.jar
     
 Launch the Typesafe activator UI:
 
