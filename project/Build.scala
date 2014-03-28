@@ -7,7 +7,7 @@ object ApplicationBuild extends Build {
   val scalaVersionValue = "2.10.2"
 
   val buildSettings = Defaults.defaultSettings ++ Seq (
-    organization        := "Mate1",
+    organization        := "com.mate1.avro",
     version             := "0.1-SNAPSHOT",
     scalaVersion        := scalaVersionValue,
     libraryDependencies := Seq(
