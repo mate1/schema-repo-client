@@ -2,7 +2,6 @@ package com.mate1.avro.repo.client
 
 import org.apache.avro.Schema
 
-
 trait AvroSchema {
   val parser = new Schema.Parser()
 

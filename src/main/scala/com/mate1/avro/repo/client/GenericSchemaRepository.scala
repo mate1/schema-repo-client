@@ -3,7 +3,7 @@ package com.mate1.avro.repo.client
 import org.apache.avro.repo.client.RESTRepositoryClient
 import scala.collection.mutable
 import java.util.logging.Logger
-import org.apache.avro.repo.{SchemaEntry, Subject}
+import org.apache.avro.repo.{Repository, SchemaEntry, Subject}
 import com.google.common.collect.{HashBiMap, BiMap}
 
 /**
@@ -28,7 +28,7 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
   // Concrete implementation !
 
   // Utilities
-  private lazy val client = new RESTRepositoryClient(getRepositoryURL)
+  protected lazy val client: Repository = new RESTRepositoryClient(getRepositoryURL)
   private val logger = Logger.getLogger(classOf[GenericSchemaRepository[ID, SCHEMA]].getName)
 
   // Internal state
