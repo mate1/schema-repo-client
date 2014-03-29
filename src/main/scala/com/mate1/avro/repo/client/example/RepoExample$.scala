@@ -6,7 +6,7 @@ import com.mate1.avro.repo.client.{GenericSchemaRepository, ShortId, AvroSchema}
 /**
  * Example implementation of the Schema repo client.
  */
-object RepoExample$
+object RepoExample
   extends GenericSchemaRepository[Short, Schema]
   with ShortId
   with AvroSchema {
