@@ -2,7 +2,7 @@ package com.mate1.avro.repo.client
 
 import org.apache.avro.Schema
 
-// String Schema
+// String Schemas
 
 class SchemaRepoWithStringIdAndStringSchemaSpec extends GenericSchemaRepositorySpec[String, String] with StringSchemaIdSpec with StringSchemaSpec {
   override def generateRepo = new GenericTestSchemaRepo[String, String] with idTrait with schemaTrait
@@ -20,7 +20,7 @@ class SchemaRepoWithLongIdAndStringSchemaSpec extends GenericSchemaRepositorySpe
   override def generateRepo = new GenericTestSchemaRepo[Long, String] with idTrait with schemaTrait
 }
 
-// Avro Schema
+// Avro Schemas
 
 class SchemaRepoWithStringIdAndAvroSchemaSpec extends GenericSchemaRepositorySpec[String, Schema] with StringSchemaIdSpec with AvroSchemaSpec {
   override def generateRepo = new GenericTestSchemaRepo[String, Schema] with idTrait with schemaTrait

@@ -7,7 +7,7 @@ import scala.Some
 
 abstract class GenericSchemaRepositorySpec[ID, SCHEMA] extends FlatSpec with ShouldMatchers {
 
-  def generateRepo: GenericTestSchemaRepo[ID, SCHEMA] // = new GenericTestSchemaRepo[ID, SCHEMA] with IdTrait[ID] with SchemaTrait[SCHEMA]
+  def generateRepo: GenericTestSchemaRepo[ID, SCHEMA]
 
   def idTypeToString: String
   def schemaTypeToString: String
