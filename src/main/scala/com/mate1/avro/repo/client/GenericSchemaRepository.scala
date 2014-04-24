@@ -42,9 +42,10 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
    * and persists the retrieved entity in the cacheMap parameter that's passed in
    *
    * @param topic to look into to get the repository's corresponding [[org.apache.avro.repo.Subject]]
-   * @param cacheKey to store in the cache, if we are able to retrieve an entity
-   * @param cacheMap to store the key and entity into, if we are able to retrieve the entity
-   *            N.B.: using a java.util.Map for compatibility with Guava's [[com.google.common.collect.BiMap]]
+   * @param cache a tuple to cace the entity. (cacheKey, cacheMap)
+   *              cacheKey: to store in the cache, if we are able to retrieve an entity
+   *              cacheMap: to store the key and entity into, if we are able to retrieve the entity
+   *                    N.B.: using a java.util.Map for compatibility with Guava's [[com.google.common.collect.BiMap]]
    * @param entityRetrievalFunction to use on the [[org.apache.avro.repo.Subject]] to get a [[org.apache.avro.repo.SchemaEntry]]
    * @param schemaEntryToStringFunction to use on the [[org.apache.avro.repo.SchemaEntry]] in order to get our (Stringly-typed) entity
    * @param stringToValueFunction to convert the (Stringly-typed) entity into the proper type (VALUE).
@@ -55,8 +56,7 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
    * @return Some(schema) if the topic and key are valid, None otherwise
    */
   private def retrieveUnknownEntity[KEY, VALUE](topic: String,
-                                                cacheKey: KEY,
-                                                cacheMap: java.util.Map[KEY, VALUE],
+                                                cache : Option[(KEY, java.util.Map[KEY, VALUE])],
                                                 entityRetrievalFunction: Subject => SchemaEntry,
                                                 schemaEntryToStringFunction: SchemaEntry => String,
                                                 stringToValueFunction: String => VALUE,
@@ -90,7 +90,10 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
                   schemaEntry
                 )
               )
-              cacheMap.put(cacheKey, entity)
+              cache match {
+                case Some((key, map)) => map.put(key, entity)
+                case None => logger.finer("Not using cache")
+              }
               Some(entity)
             }
           }
@@ -142,8 +145,7 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
     def specificRetrieveFunction(cacheMap: java.util.Map[KEY, VALUE]): Option[VALUE] = {
       retrieveUnknownEntity[KEY, VALUE](
         topic,
-        cacheKey,
-        cacheMap,
+        cache = Some((cacheKey, cacheMap)),
         entityRetrievalFunction,
         schemaEntryToStringFunction,
         stringToValueFunction,
@@ -181,6 +183,21 @@ abstract class GenericSchemaRepository[ID, SCHEMA] {
       mainCache = idToSchemaCache,
       inverseCache = schemaToIdCache,
       entityRetrievalFunction = _.lookupById(idToString(schemaId)),
+      schemaEntryToStringFunction = _.getSchema,
+      stringToValueFunction = stringToSchema
+    )
+  }
+
+  /**
+   * Warning: not for high throughput, there is no cache.
+   * @param topic
+   * @return Some(schema) if the topic exists, None otherwise
+   */
+  def getLatestSchema(topic: String): Option[SCHEMA] = {
+    retrieveUnknownEntity[Any, SCHEMA](
+      topic,
+      cache = None,
+      entityRetrievalFunction = _.latest,
       schemaEntryToStringFunction = _.getSchema,
       stringToValueFunction = stringToSchema
     )

@@ -81,4 +81,24 @@ abstract class GenericSchemaRepositorySpec[ID, SCHEMA] extends FlatSpec with Sho
     idForSchema1 should be === otherIdForSchema1
     idForSchema2 should be === otherIdForSchema2
   }
+
+  it should "return the latest schema when asked to" in {
+    val repo = generateRepo
+
+    val retrievedLatestSchemaInTopicA_NoSchema : Option[SCHEMA] = repo.getLatestSchema(topicA)
+
+    repo.registerSchema(topicA, schema1)
+    val retrievedLatestSchemaInTopicA_Schema1 : Option[SCHEMA] = repo.getLatestSchema(topicA)
+
+    repo.registerSchema(topicA, schema2)
+    val retrievedLatestSchemaInTopicA_Schema2 : Option[SCHEMA] = repo.getLatestSchema(topicA)
+
+    repo.registerSchema(topicA, schema3)
+    val retrievedLatestSchemaInTopicA_Schema3 : Option[SCHEMA] = repo.getLatestSchema(topicA)
+
+    retrievedLatestSchemaInTopicA_NoSchema should be (None)
+    retrievedLatestSchemaInTopicA_Schema1 should be === Some(schema1)
+    retrievedLatestSchemaInTopicA_Schema2 should be === Some(schema2)
+    retrievedLatestSchemaInTopicA_Schema3 should be === Some(schema3)
+  }
 }
