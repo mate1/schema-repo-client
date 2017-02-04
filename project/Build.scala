@@ -4,16 +4,15 @@ import sbt.Keys._
 object ApplicationBuild extends Build {
 
   val projectName = "schema-repo-client"
-  val scalaVersionValue = "2.10.2"
 
   val buildSettings = Defaults.defaultSettings ++ Seq (
     organization        := "com.mate1.avro",
     version             := "0.1-SNAPSHOT",
-    scalaVersion        := scalaVersionValue,
+    crossScalaVersions  := Seq("2.10.2", "2.11.8"),
     libraryDependencies := Seq(
       "org.apache.avro" % "avro" % "1.7.5",
       "org.apache.avro.repo" % "avro-repo-client" % "1.7.5-1124-SNAPSHOT",
-      "org.scala-lang" % "scala-library" % scalaVersionValue,
+      "org.scala-lang" % "scala-library" % scalaVersion.value,
       "com.google.code.findbugs" % "jsr305" % "1.3.9",
       "com.google.guava" % "guava" % "14.0.1",
       "javax.inject" % "javax.inject" % "1"
